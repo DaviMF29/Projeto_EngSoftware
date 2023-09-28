@@ -11,22 +11,27 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/",async(req, res) => {
-    res.json({
-            message: "funfa"
-        })
-})
-
-app.get("/planta/:tratamento", async (req, res) => {
-    const plantas = await database.selectPlanta_tratamento(req.params.tratamento);
+app.get("/planta/:tipo_do_filtro", async (req, res) => {
+    const { tipo_do_filtro } = req.params;
+    let plantas;
+  
+    if (tipo_do_filtro === 'nome_cientifico') {
+      plantas = await database.selectPlanta_nomeCientifico(req.query.valor);
+    } else if (tipo_do_filtro === 'nome') {
+      plantas = await database.selectPlanta_nome(req.query.valor);
+    }
+    else if(tipo_do_filtro === 'nome'){
+        plantas = await database.selectPlanta_tratamento(req.query.valor); 
+    }
+    else {
+      // Lidar com um caso inválido, se necessário
+      res.status(400).json({ error: 'Tipo de consulta inválido' });
+      return;
+    }
+  
     res.json(plantas);
-})
-
-app.get("/planta/:nome", async (req, res) => {
-    const plantas =await database.selectPlanta_nome(req.params.nome);
-    res.json(plantas);
-})
-
+  });
+  
 
 app.get("/planta", async (req, res) => {
     const plantas = await database.selectPlantas();

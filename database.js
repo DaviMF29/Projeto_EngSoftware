@@ -12,9 +12,23 @@ async function connect() {
     return pool.connect();
 }
 
+async function selectPlanta_nome(nome) {
+    const client = await connect();
+    const res = await client.query('SELECT * FROM planta WHERE nome = $1',[nome]);
+    return res.rows;
+}
 
+async function selectPlanta_nomeCientifico(nome_cientifico) {
+    const client = await connect();
+    const res = await client.query('SELECT * FROM planta WHERE nome_cientifico = $1',[nome_cientifico]);
+    return res.rows;
+}
 
-
+async function selectPlanta_tratamento(tratamento) {
+    const client = await connect();
+    const res = await client.query('SELECT * FROM planta WHERE tratamento = $1',[tratamento]);
+    return res.rows;
+}
 
 async function selectPlantas() {
     const client = await connect();
@@ -25,18 +39,6 @@ async function selectPlantas() {
 async function selectPlanta_id(id) {
     const client = await connect();
     const res = await client.query('SELECT * FROM planta WHERE id = $1',[id]);
-    return res.rows;
-}
-
-async function selectPlanta_nome(nome) {
-    const client = await connect();
-    const res = await client.query('SELECT * FROM planta WHERE nome = $1',[nome]);
-    return res.rows;
-}
-
-async function selectPlanta_tratamento(tratamento) {
-    const client = await connect();
-    const res = await client.query('SELECT * FROM planta WHERE tratamento = $1',[tratamento]);
     return res.rows;
 }
 
@@ -61,6 +63,6 @@ async function deletePlanta(id){
     const sql = 'DELETE FROM planta where id=$1;';
     return await client.query(sql, [id]);
 }
-module.exports = { selectPlantas,selectPlanta_id,selectPlanta_nome,selectPlanta_tratamento, insertPlanta,updatePlanta,deletePlanta }
+module.exports = { selectPlantas,selectPlanta_nome,selectPlanta_id,selectPlanta_nomeCientifico,selectPlanta_tratamento, insertPlanta,updatePlanta,deletePlanta }
 
 connect();
