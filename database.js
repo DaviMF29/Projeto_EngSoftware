@@ -63,6 +63,6 @@ async function deletePlanta(id){
     const sql = 'DELETE FROM planta where id=$1;';
     return await client.query(sql, [id]);
 }
-module.exports = { selectPlantas,selectPlanta_nome,selectPlanta_id,selectPlanta_nomeCientifico,selectPlanta_tratamento, insertPlanta,updatePlanta,deletePlanta }
+module.exports = { selectPlantas,selectPlanta_nome,selectPlanta_nomeCientifico,selectPlanta_tratamento, insertPlanta,updatePlanta,deletePlanta }
 
 connect();
