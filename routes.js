@@ -1,14 +1,5 @@
-require("dotenv").config();
-
-const express = require("express");
-const database = require("./database");
-//const router = express.Router();
-const port = process.env.PORTPG; 
-const path = require('path');
-const req = require("express/lib/request"); //sem uso ??
-
-
-
+require('dotenv').config()
+const express = require('express')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -21,67 +12,11 @@ app.use(express.json())
 
 const User = require('./models/User')
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-app.get("/plantas", async (req, res) => {
-    const plantas = await database.selectPlantas();
-    res.json(plantas);
-});
-
-
-app.get("/:tipo_da_tela", async (req, res) => {
-    const { tipo_da_tela } = req.params;
-
-    if (tipo_da_tela === 'sobre') {
-        res.sendFile(path.join(__dirname, 'sobre.html'));
-    } else if (tipo_da_tela === 'tela_inicial') {
-        res.sendFile(path.join(__dirname, 'index.html'));
-    } else if (tipo_da_tela === 'cadastro') {
-        res.sendFile(path.join(__dirname, 'cadastro.html'));
-    } else {
-        // Lidar com um caso inválido, se necessário
-        res.status(400).json({ error: 'Tipo de consulta inválido' });
-        return;
-    }
-});
-
-
-
-
-
-app.get("/planta/:tipo_do_filtro", async (req, res) => {
-    const { tipo_do_filtro } = req.params;
-    let plantas;
-
-    try {
-        plantas = await database.selectPlanta(req.query.valor); 
-    } catch (error) {
-        res.status(400).json({ error: 'Tipo de consulta inválido' });
-        return; 
-    }
-    res.json(plantas);
-});
-
-
-
-
-
-app.post("/planta", async (req, res) => {
-    await database.insertPlanta(req.body);
-    res.status(201);
+app.get('/', (req, res) =>{
+    res.status(200).json({msg: "Bem vindo"});
 })
 
-app.patch("/planta/:id", async (req, res) => {
-    await database.updatePlanta(req.params.id, req.body);
-    res.status(200);
-})
-
-app.delete("/planta/:id", async (req, res) => {
-    await database.deletePlanta(req.params.id);
-    res.status(204);
-})
-
+//rota privada
 
 function checkToken(req, res, next) {
     const authHeader = req.headers["authorization"];
@@ -101,7 +36,68 @@ function checkToken(req, res, next) {
   }
 
 
-async function cadastrar(){
+app.get("/user/:id",checkToken, async(req,res)=>{
+
+    const id = req.params.id
+
+    // checando se existe
+
+    const user = await User.findById(id,'-password')
+
+    if(!user){
+        return res.status(422).json({msg:"Usuário não encontrado"})
+    }
+
+    res.status(200).json({user})
+})
+
+app.get("/etnobook/home",checkToken, async(req, res) =>{
+
+    try {
+        // Consulta ao banco de dados PostgreSQL para obter dados
+        const dadosDoBanco = await db.any('SELECT * FROM sua_tabela');
+        
+        // Função para criar objetos HTML com base nos dados do banco de dados
+        function criarObjetoHTML(dados) {
+            return dados.map(item => `<div>${item.nome}: ${item.valor}</div>`).join('');
+        }
+
+        // Criar objeto HTML usando dados do banco de dados
+        const objetoHTML = criarObjetoHTML(dadosDoBanco);
+
+        // Enviar objeto HTML como resposta
+        res.send(objetoHTML);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao acessar o banco de dados');
+    }
+
+})
+
+
+
+
+app.get("/:tipo_da_tela", async (req, res) => {
+    const { tipo_da_tela } = req.params;
+
+    if (tipo_da_tela === 'sobre') {
+        res.sendFile(path.join(__dirname, '/views/sobre-etnobook.html'));
+    } else if (tipo_da_tela === 'creditos') {
+        res.sendFile(path.join(__dirname, '/views/creditos-etnobook.html'));
+    } else if (tipo_da_tela === 'contato') {
+        res.sendFile(path.join(__dirname, '/views/contato-etnobook.html'));
+    } else {
+        // Lidar com um caso inválido, se necessário
+        res.status(400).json({ error: 'Tipo de consulta inválido' });
+        return;
+    }
+});
+
+
+
+
+
+app.post('/auth/register/',async(req, res) =>{
     const {name, email, password, confirmpassword} = req.body
 
     //validando
@@ -149,13 +145,15 @@ async function cadastrar(){
         res.status(500).json({msg : "Aconteceu um erro no servidor. Tente novamente mais tarde."})
     }
     
-}
+})
 
-async function login(){
+
+//Login do user
+
+app.post("/auth/login",async (req,res)=>{
     const {email, password} = req.body
 
     //validação 
-
 
     if(!email){
         return res.status(422).json({msg :"O email é obrigatório"})
@@ -194,12 +192,12 @@ async function login(){
         console.log(error)
         res.status(500).json({msg : "Aconteceu um erro no servidor. Tente novamente mais tarde."})
     }
-}
-    
+})
+
 
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
-app.listen(port);
+
 
 mongoose
 .connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.7hzchco.mongodb.net/`)
@@ -208,4 +206,15 @@ mongoose
     console.log("Conectado ao banco")
 })
 .catch((err) =>console.log(err))
-console.log("Connect");
+
+
+
+
+
+
+
+
+
+
+
+
