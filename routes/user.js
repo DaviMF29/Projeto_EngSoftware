@@ -1,40 +1,18 @@
-require('dotenv').config()
-const express = require('express')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const pgp = require('pg-promise')();
+const token = require('token');
+const express = require("express");
+const { verifyToken, verifyTokenAuth, verifyTokenAdmin } = require("./src/controllers/verifyToken");
 
-const dbPostgres = require("./database");
-const app = express()
 
 app.use(express.json())
-
-
+app.use(express.static(path.join(__dirname, 'views')));
 const User = require('./models/User')
 
-app.get('/', (req, res) =>{
-    res.status(200).json({msg: "Bem vindo"});
-})
 
-//rota privada
 
-function checkToken(req, res, next) {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-  
-    if (!token) return res.status(401).json({ msg: "Acesso negado!" });
-  
-    try {
-      const secret = process.env.SECRET;
-  
-      jwt.verify(token, secret);
-  
-      next();
-    } catch (err) {
-      res.status(400).json({ msg: "O Token é inválido!" });
-    }
-  }
 
 
 app.get("/user/:id",checkToken, async(req,res)=>{
@@ -51,69 +29,6 @@ app.get("/user/:id",checkToken, async(req,res)=>{
 
     res.status(200).json({user})
 })
-
-app.get("/etnobook/home",checkToken, async(req, res) =>{
-
-    try {
-        // Consulta ao banco de dados PostgreSQL para obter dados
-        const dadosDoBanco = await db.any('SELECT * FROM sua_tabela');
-        
-        // Função para criar objetos HTML com base nos dados do banco de dados
-        function criarObjetoHTML(dados) {
-            return dados.map(item => `<div>${item.nome}: ${item.valor}</div>`).join('');
-        }
-
-        // Criar objeto HTML usando dados do banco de dados
-        const objetoHTML = criarObjetoHTML(dadosDoBanco);
-
-        // Enviar objeto HTML como resposta
-        res.send(objetoHTML);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Erro ao acessar o banco de dados');
-    }
-
-})
-
-
-
-
-app.get("/:tipo_da_tela", async (req, res) => {
-    const { tipo_da_tela } = req.params;
-
-    if (tipo_da_tela === 'sobre') {
-        res.sendFile(path.join(__dirname, '/views/sobre-etnobook.html'));
-    } else if (tipo_da_tela === 'creditos') {
-        res.sendFile(path.join(__dirname, '/views/cadastro-etnobook.html'));
-    } else if (tipo_da_tela === 'contato') {
-        res.sendFile(path.join(__dirname, '/views/index-etnobook.html'));
-    } else {
-        // Lidar com um caso inválido, se necessário
-        res.status(400).json({ error: 'Tipo de consulta inválido' });
-        return;
-    }
-});
-
-app.get("/plantas/:tipo_do_filtro", async (req, res) => {
-    const { tipo_do_filtro } = req.params;
-    let plantas;
-
-    if (tipo_do_filtro === 'nome') {
-        plantas = await database.selectPlanta_nome(req.query.valor);
-    } else if (tipo_do_filtro === 'nome_cientifico') {
-        plantas = await database.selectPlanta_nomeCientifico(req.query.valor);
-    } else if (tipo_do_filtro === 'tratamento') {
-        plantas = await database.selectPlanta_tratamento(req.query.valor);
-    }
-    else{
-        res.status(400).json({ error: 'Tipo de consulta inválido' });
-        return; 
-    }
-    res.json(plantas);
-});
-
-
-
 
 
 app.post('/auth/register/',async(req, res) =>{
@@ -223,23 +138,7 @@ app.post("/auth/login",async (req,res)=>{
 const dbUser = process.env.DB_USER
 const dbPassword = process.env.DB_PASS
 
-app.post("/registrarPlantas/",checkToken,async (req,res)=>{
-    const {nomePopular, nomeCientifico, tratamento} = req.body
 
-    if(!nomePopular){
-        return res.status(422).json({msg :"O nome popular  é obrigatório"})
-    }
-    if(!nomeCientifico){
-        return res.status(422).json({msg :"O nome científico é obrigatório"})
-    }
-    if(!tratamento){
-        return res.status(422).json({msg :"O tratamento é obrigatório"})
-    }
-
-    
-
-
-})
 mongoose
 .connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.7hzchco.mongodb.net/`)
 .then(()=>{
@@ -247,15 +146,3 @@ mongoose
     console.log("Conectado ao banco")
 })
 .catch((err) =>console.log(err))
-
-
-
-
-
-
-
-
-
-
-
-
