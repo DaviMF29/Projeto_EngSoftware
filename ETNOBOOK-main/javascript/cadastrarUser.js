@@ -51,8 +51,5 @@ async function registerUser() {
     }
 }
 
-/**document.getElementById('cadastrarform').addEventListener('submit', function (event) {
-    event.preventDefault(); // Impede o envio do formulário padrão
-    registerUser();
-}); */
+
 
