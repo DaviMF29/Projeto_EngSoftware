@@ -1,4 +1,4 @@
-###Sistema de Informações sobre Plantas
+# **SISTEMA DE INFORMAÇÕES SOBRE PLANTAS**
 
 O Sistema de Informações sobre Plantas é uma aplicação web que fornece informações abrangentes sobre diversas espécies de plantas. Seu objetivo é auxiliar usuários interessados em botânica, jardinagem, ou simplesmente curiosos sobre o reino vegetal. A aplicação permite aos usuários visualizar detalhes específicos sobre cada planta, realizar buscas personalizadas e explorar uma variedade de informações úteis.
 
