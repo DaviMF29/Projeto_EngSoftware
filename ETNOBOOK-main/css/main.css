@@ -27,6 +27,7 @@ body{
     width: 100%;
     height: 100%;
     overflow-x: hidden;
+    background-color: var(--cor3);
 }
 
 header{
@@ -57,6 +58,7 @@ nav{
     align-items: center;
     height: 5.5vh;
     right: 0;
+    z-index: 2;
 }
 
 nav a{
@@ -89,57 +91,54 @@ nav a{
     transition: 0.3s;
 }
 
-@media (max-width: 999px){
+.nav-list{
+    position: absolute;
+    margin: 0;
+    top: 6.5vh;
+    right: 0;
+    width: 35vw;
+    background: var(--cor7);
+    flex-direction: column;
+    align-items:start;
+    line-height: 10vh;
+    padding: 10px;
+    transform:translateX(100%);
+    transition: transform 0.3s ease-in;
+}
 
-    .nav-list{
-        position: absolute;
-        margin: 0;
-        top: 6.5vh;
-        right: 0;
-        width: 35vw;
-        background: var(--cor7);
-        flex-direction: column;
-        align-items:start;
-        line-height: 10vh;
-        padding: 10px;
-        transform:translateX(100%);
-        transition: transform 0.3s ease-in;
-    }
+.nav-list li{
+    margin-left: 0;
+    opacity: 0;
+}
 
-    .nav-list li{
-        margin-left: 0;
+.mobile-menu{
+    display: block;
+}
+
+.nav-list.active{
+    transform: translateX(0);
+}
+
+@keyframes navLinkFade {
+    from {
         opacity: 0;
-    }
-
-    .mobile-menu{
-        display: block;
-    }
-
-    .nav-list.active{
+        transform: translateX(50px);
+    } to{
+        opacity: 1;
         transform: translateX(0);
     }
+}
 
-    @keyframes navLinkFade {
-        from {
-            opacity: 0;
-            transform: translateX(50px);
-        } to{
-            opacity: 1;
-            transform: translateX(0);
-        }
-    }
-
-    .mobile-menu.active .line1 {
-        transform: rotate(-45deg) translate(-8px, 8px);
-    }
-      
-    .mobile-menu.active .line2 {
-        opacity: 0;
-    }
-      
-    .mobile-menu.active .line3 {
-        transform: rotate(45deg) translate(-5px, -7px);
-    }
+.mobile-menu.active .line1 {
+    transform: rotate(-45deg) translate(-8px, 8px);
+}
+    
+.mobile-menu.active .line2 {
+    opacity: 0;
+}
+    
+.mobile-menu.active .line3 {
+    transform: rotate(45deg) translate(-5px, -7px);
 }
 
 /*Parte referente ao filtro de busca*/
@@ -197,72 +196,133 @@ nav a{
     margin: 5px;
 }
 
-
-
-/*Parte referente a tela de cards*/
-@media (max-width:500px){
-    .card{
-        width: 100%;
-        background-color: var(--cor3);
-        border-radius: 4px;
-        box-shadow: 5px 5px 15px -3px var(--cor5);
-        padding: 10px 15px;
-    }
-    .card h3{
-        font-size: 19px;
-        margin-top: 15px;
-        line-height: 24px;
-        color: var(--cor8);
-    }
-    .card .pesquisar{
-        display: flex;
-        margin-top: 15px;
-    }
-    .card .pesquisar input{
-        width: 100%;
-        outline: none;
-        border: none;
-        border-radius: 5px;
-        padding:10px;
-        background-color: var(--cor1);
-        margin-right: 3px;
-    }
-    .card input::placeholder{
-        font-size: 10px;
-        color: var(--cor4);
-        font-weight: 500;
-    }
-    .card .pesquisar button{
-        width: 45px;
-        border: none;
-        border-radius: 5px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        background-color: var(--cor7);
-        outline: none;
-    }
-    .card .pesquisar button img{
-        width: 45%;
-    }
-    .rolagem{
-        margin-top: 10px;
-        display: flex;
-        flex-direction: row;
-        overflow: scroll;
-    }
-    .rolagem h5{
-        font-family: var(--fonte-detalhes);
-        font-size: 12px;
-        text-align: center;
-        color: var(--cor7);
-    }
-    .rolagem img{
-        height: 120px;
-        width: 120px;
-    }
+/*Parte referente a tela principal*/
+.card{
+    width: 100%;
+    background-color: var(--cor3);
+    border-radius: 4px;
+    box-shadow: 5px 5px 15px -3px var(--cor5);
+    padding: 10px 15px;
 }
+.card h3{
+    font-size: 19px;
+    margin-top: 15px;
+    line-height: 24px;
+    color: var(--cor8);
+}
+.card .pesquisar{
+    display: flex;
+    margin-top: 15px;
+}
+.card .pesquisar input{
+    width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    padding:10px;
+    background-color: var(--cor1);
+    margin-right: 3px;
+}
+.card input::placeholder{
+    font-size: 10px;
+    color: var(--cor4);
+    font-weight: 500;
+}
+.card .pesquisar button{
+    width: 45px;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--cor7);
+    outline: none;
+}
+.card .pesquisar button img{
+    width: 45%;
+}
+
+/*Parte referente ao swiper*/
+
+.swiper-wrapper {
+    position: relative;
+    margin: 15px 10px;
+    z-index: 1;
+    display: flex;
+    transition-property: transform;
+    transition-timing-function: var(--swiper-wrapper-transition-timing-function,initial);
+    box-sizing: content-box;
+}
+
+.swiper-pagination {
+   opacity: var(--swiper-pagination-bullet-opacity,0);
+}
+
+.swiper-slide{
+    background-color: var(--cor2);
+    box-shadow: 10px 10px  15px -3px var(--cor5);
+    padding: 10px;
+    border-radius: 10px;
+    line-height: 30px;
+    align-items: center;
+}
+
+.nome_popular{
+    font-size: 28px;
+    color:#0d5815;
+}
+.nome_cientifico{
+    font-size: 12px;
+}
+
+.detalhes-container{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cor1);
+    border-radius: 10px;
+    padding: 15px;
+}
+.img_planta{
+    margin-top: 10px;
+    width: 90%;
+}
+
+.detalhes-container{
+    margin: 10px;
+}
+.info-container h1{
+    font-size: 20px;
+    color: var(--cor7);
+}
+.info-container h2{
+    opacity: 50%;
+    margin-bottom: 20px;
+}
+.info-container p{
+    text-align: justify;
+    font-size: 14px;
+}
+
+.img-container{
+    width: 300px;
+}
+
+.detalhes-container p{
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.detalhes-container p a{
+    text-decoration: none;
+    color: var(--cor7);
+}
+.detalhes-container p a:hover{
+    color: var(--cor6);
+}
+
 
 .fixar-rodape{
     background-color: var(--cor7);
@@ -278,7 +338,20 @@ nav a{
     padding-top:15px ;
 }
 
-.nome_popular{
-    color: red;
-    
+/* Adicione estas regras CSS ao seu arquivo de estilo (main.css) ou insira diretamente no cabeçalho HTML */
+
+
+.item {
+    border-bottom: 1px solid #9c9999; /* Adicione uma borda inferior com a cor desejada */
+    padding-bottom: 10px; /* Adicione espaçamento interno na parte inferior conforme necessário */
+    margin-bottom: 10px; /* Adicione margem na parte inferior conforme necessário */
 }
+
+/* Adicione uma regra para a última .item para remover a borda inferior */
+.item:last-child {
+    border-bottom: none;
+    margin-bottom: 0; /* Se desejar remover a margem na última .item */
+}
+
+
+
