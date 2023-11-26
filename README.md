@@ -20,44 +20,13 @@ Responsividade:
 O design da aplicação é responsivo, proporcionando uma experiência consistente em diferentes dispositivos, como desktops, tablets e smartphones.
 Tecnologias Utilizadas
 Frontend:
-
-HTML5, CSS3, JavaScript (ES6+)
-Framework CSS (por exemplo, Bootstrap, Tailwind CSS)
-Bibliotecas JavaScript (por exemplo, Swiper para carrosséis)
+HTML5, CSS3, JavaScript 
 Backend:
 
-Node.js (ou tecnologia backend de sua escolha)
-Express.js (ou outro framework web)
-MongoDB (ou outro banco de dados para armazenar informações sobre plantas)
+Node.js 
+Express.js 
+MongoDB 
 JWT (JSON Web Tokens) para autenticação de usuário
-Instalação e Execução
-Clonar Repositório:
 
-bash
-Copy code
-git clone https://github.com/seu-usuario/sistema-informacoes-plantas.git
-cd sistema-informacoes-plantas
-Instalar Dependências:
 
-bash
-Copy code
-npm install
-Configuração do Banco de Dados:
 
-Configurar conexão com o banco de dados MongoDB.
-Configuração do Ambiente:
-
-Criar um arquivo .env e configurar variáveis de ambiente, como segredo do JWT, URL do banco de dados, etc.
-Executar Aplicação:
-
-bash
-Copy code
-npm start
-Acessar a Aplicação:
-
-Acesse a aplicação em http://localhost:3000 (ou a porta configurada).
-Contribuições
-Contribuições são bem-vindas! Se você encontrar problemas, bugs ou tiver melhorias a sugerir, por favor, abra uma issue ou envie um pull request.
-
-Licença
-Este projeto está sob a Licença MIT. Sinta-se à vontade para utilizá-lo conforme necessário.
